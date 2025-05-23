@@ -27,7 +27,7 @@ const weightsList = async (req, res) => {
     }
 };
 
-// /api/addWeight
+// GET /api/weights
 const addWeight = async (req, res) => {
     const userId = req.auth._id;
     var { weight, date } = req.body;
@@ -45,12 +45,15 @@ const addWeight = async (req, res) => {
         console.log("New weight added: ", newWeight);
         res.status(201).json(newWeight);
     } catch (err) {
+        if (err === 11000) {
+            return res.status(409).json({ message: 'Weight entry already exists for this date' });
+        }
         console.error("Error adding weight: ", err);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
-// /api/editWeight/:id
+// PUT /api/weightd/:id
 const editWeight = async (req, res) => {
     const userId = req.auth._id;
     const weightId = req.params.id;
