@@ -1,0 +1,29 @@
+/*
+    @File: weightEntries.js
+    @Project: FitGlitch
+    @Author: John Miller
+    @Date: 2025-05
+    @Purpose: This file contains test data for weight entries in the FitGlitch application, formatted as JSON objects.
+*/
+[
+  {
+    "weight": 196.4,
+    "date": "2025-05-21T08:15:00.000Z"
+  },
+  {
+    "weight": 194.9,
+    "date": "2025-05-19T07:45:00.000Z"
+  },
+  {
+    "weight": 197.1,
+    "date": "2025-05-17T09:10:00.000Z"
+  },
+  {
+    "weight": 195.6,
+    "date": "2025-05-15T10:30:00.000Z"
+  },
+  {
+  "weight": 198.6,
+  "date": "2025-05-23T14:30:00.000Z"
+}
+]
