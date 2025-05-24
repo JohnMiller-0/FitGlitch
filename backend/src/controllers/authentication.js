@@ -28,7 +28,9 @@ const User = require('../models/user');
  * @returns {Object} JSON object with a JWT token or error message.
  */
 const register = async (req, res) => {
-    console.log("Register route hit");
+    // Uncomment the following line to log the request body for debugging
+    // console.log("Register route hit");
+
     const { email, password, goalWeight, caloricGoal, loseWeight } = req.body;
     if (!email || !password || !goalWeight || !caloricGoal || loseWeight === undefined) {
         return res.status(400).json({ message: 'All fields are required.' });
@@ -70,29 +72,33 @@ const register = async (req, res) => {
  * @returns {Object} JSON object with a JWT token or error message.
  */
 const login = async (req, res) => {
-        console.log("Login route hit");
-        if(!req.body.email || !req.body.password)
-        {
-            return res.status(400).json({"message" : "All fields are required."});
-        }
+    // Uncomment the following line to log the request body for debugging    
+    // console.log("Login route hit");
+
+     if(!req.body.email || !req.body.password)
+    {
+        return res.status(400).json({"message" : "All fields are required."});
+    }
     
-        passport.authenticate('local', (err, user, info) => {
-            if(err)
-            {
-                console.log(err);
-                return res.status(400).json(err);
-            }
+    passport.authenticate('local', (err, user, info) => {
+        if(err)
+        {
+            console.log(err);
+            return res.status(400).json(err);
+        }
             
-            if(user)
-            {
-                const token = user.generateJWT();
-                console.log("User authenticated successfully");
-                console.log("Token generated: ", token);
-                return res.status(200).json({token});
-            } else {
-                return res.status(401).json(info);
-            }
-        } )(req, res);
+        if(user)
+        {
+            const token = user.generateJWT();
+            
+            // Uncomment the following lines to log the user and token for debugging
+            // console.log("User authenticated successfully");
+            // console.log("Token generated: ", token);
+            
+            return res.status(200).json({token});
+        } else {
+            return res.status(401).json(info);
+        } }) (req, res);
 };
 
 module.exports = {

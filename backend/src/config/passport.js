@@ -23,7 +23,8 @@ const User = require('../models/user');
 passport.use(new LocalStrategy(
     { usernameField: 'email' },
     async (username, password, done) => {
-      console.log("Passport strategy triggered with:", username);
+      // Uncomment the following line to log the username for debugging
+      // console.log("Passport strategy triggered with:", username);
       
       try {
         const user = await User.findOne({ email: username });

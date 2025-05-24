@@ -112,8 +112,10 @@ const editWeight = async (req, res) => {
         if (!updatedWeight) {
             return res.status(404).json({ message: 'Weight not found' });
         }
-
-        console.log("Weight updated: ", updatedWeight);
+        
+        // Uncomment the following line to log the updated weight for debugging
+        // console.log("Weight updated: ", updatedWeight);
+        
         res.status(200).json(updatedWeight);
     } catch (err) {
         console.error("Error updating weight: ", err);
