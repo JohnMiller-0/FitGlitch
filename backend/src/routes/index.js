@@ -38,6 +38,7 @@ router
 
 router
     .route('/weights/:id')
+    .get(auth, weightController.getWeight)
     .put(auth, weightController.editWeight)
     .delete(auth, weightController.deleteWeight);
 

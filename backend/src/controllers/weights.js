@@ -80,6 +80,39 @@ const addWeight = async (req, res) => {
     }
 }
 
+/**
+ * Retrieves a specific weight entry by ID for the authenticated user.
+ *
+ * @param {Object} req - The request object containing auth info and route parameters.
+ * @param {Object} res - The response object used to return data or error messages.
+ * @returns {Object} - JSON response with the weight entry or an error message.
+ */
+const getWeight = async (req, res) => {
+    const userId = req.auth._id;
+    const weightId = req.params.id;
+
+    // Ensure the request is authenticated
+    if (!userId) {
+        return res.status(401).json({ message: 'Unauthorized — missing payload' });
+    }
+
+    try {
+        // Find the weight entry by ID and confirm it belongs to the authenticated user
+        const weight = await Weight.findOne({ _id: weightId, userId });
+
+        if (!weight) {
+            return res.status(404).json({ message: 'Weight not found' });
+        }
+
+        // DEBUG: Uncomment to log retrieved weight entry
+        // console.log("Weight fetched: ", weight);
+        
+        return res.status(200).json(weight);
+    } catch (err) {
+        console.error("Error fetching weight: ", err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 /**
  * PUT /api/weights/:id
