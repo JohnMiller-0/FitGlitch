@@ -1,22 +1,25 @@
-/*
-    @File: passport.js
-    @Project: FitGlitch
-    @Author: John Miller
-    @Date: 2025-05
-    @Purpose: This file is responsible for implementing the authentication logic using Passport.js.
-    @Dependencies: passport, mongoose, User model
-    @Description: 
-        - Implements the local strategy for user authentication.
-        - Validates user credentials and returns the user object if valid.
-        - Exports the configured Passport instance for use in other parts of the application.
-*/
+/**
+ * @file passport.js
+ * @project FitGlitch
+ * @author John Miller
+ * @date 2025-05
+ * @description Configures Passport.js for local strategy authentication.
+*/ 
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const User = require('../models/user');
 
-
+/**
+ * Configures Passport's local strategy to authenticate users by email and password.
+ * 
+ * @function
+ * @param {string} username - The user's email address (provided via `usernameField`).
+ * @param {string} password - The plaintext password to validate.
+ * @param {function} done - Passport callback function to return results.
+ * @returns {void}
+ */
 passport.use(new LocalStrategy(
     { usernameField: 'email' },
     async (username, password, done) => {

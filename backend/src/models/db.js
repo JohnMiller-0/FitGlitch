@@ -1,20 +1,10 @@
-/*
-    @File: db.js
-    @Project: FitGlitch
-    @Purpose: This file is responsible for connecting to the MongoDB database using Mongoose.
-    @Author: John Miller
-    @Date: 2025-05
-    @Dependencies: mongoose, readline
-    @Description: 
-        - Builds the MongoDB connection URI from environment or defaults to localhost.
-        - Connects to the MongoDB database with a timeout.
-        - Logs connection events (connected, error, disconnected).
-        - Handles graceful shutdown for nodemon restarts, app termination, and container shutdowns.
-        - Includes a Windows-specific workaround for handling SIGINT signals properly.
-    @Reference: 
-        Das, A. (2021, June 26). *How to gracefully shutdown an Express.js application in production*. Medium.
-        https://article.arunangshudas.com/how-to-gracefully-shutdown-an-express-js-application-in-production-b87e542d2163
-*/
+/**
+ * @file db.js
+ * @project FitGlitch
+ * @author John Miller
+ * @date 2025-05
+ * @description Handles MongoDB connection and graceful shutdown with Mongoose.
+ */
 
 const mongoose = require('mongoose');
 const readline = require('readline');
@@ -22,15 +12,18 @@ const readline = require('readline');
 const host = process.env.DB_HOST || '127.0.0.1';
 const dbURI = `mongodb://${host}/fitglitch`;
 
-// Build the connection string and set the connection timeout (in ms)
-const connect = () => {
-  setTimeout(() => {
-    mongoose.connect(dbURI, {
+// Connect to MongoDB
+// Use the MongoDB URI from environment variables or default to localhost
+const connect = async () => {
+  try {
+    await mongoose.connect(dbURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000
     });
-  }, 1000);
+  } catch (err) {
+    console.error('Initial MongoDB connection error:', err);
+  }
 };
 
 // Monitor connection events

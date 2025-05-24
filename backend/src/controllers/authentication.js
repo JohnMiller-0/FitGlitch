@@ -1,23 +1,32 @@
-/*
-    @purpose: user authentication controller for FitGlitch
-    @Author: John Miller
-    @Date: 2025-05
-    @Dependencies: passport, mongoose, User model
-    @description: This file contains the authentication logic for user registration and login.
-    @exports: register and login functions
-    @notes: 
-        - The register function handles user registration, including input validation and password hashing.
-        - The login function handles user login, including authentication using Passport.js.
-        - Both functions return JSON responses with appropriate status codes and messages.
-        - The register function checks for duplicate email addresses and returns an error if found.
-        - The login function uses Passport.js to authenticate the user and return a JWT token if successful.
-*/
+/**
+ * @file authentication.js
+ * @project FitGlitch
+ * @author John Miller
+ * @date 2025-05
+ * @description Contains the authentication logic for user registration and login.
+ */
 
 const passport = require('passport');
 const mongoose = require('mongoose');
 const User = require('../models/user');
 
-
+/**
+ * Registers a new user.
+ * - Validates input fields including email, password, and goals.
+ * - Ensures password is at least 6 characters.
+ * - Hashes the password and stores user in the database.
+ * - Returns a signed JWT token on successful registration.
+ * 
+ * @function
+ * @param {Object} req - Express request object containing user registration data in `body`.
+ * @param {string} req.body.email - User's email address.
+ * @param {string} req.body.password - User's password.
+ * @param {number} req.body.goalWeight - User's goal weight.
+ * @param {number} req.body.caloricGoal - User's daily caloric goal.
+ * @param {boolean} req.body.loseWeight - Whether the user wants to lose weight.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON object with a JWT token or error message.
+ */
 const register = async (req, res) => {
     console.log("Register route hit");
     const { email, password, goalWeight, caloricGoal, loseWeight } = req.body;
@@ -48,6 +57,18 @@ const register = async (req, res) => {
 
 };
 
+/**
+ * Logs in an existing user.
+ * - Authenticates user with Passport.js local strategy.
+ * - On success, returns a signed JWT token.
+ * 
+ * @function
+ * @param {Object} req - Express request object containing login credentials in `body`.
+ * @param {string} req.body.email - User's email address.
+ * @param {string} req.body.password - User's password.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON object with a JWT token or error message.
+ */
 const login = async (req, res) => {
         console.log("Login route hit");
         if(!req.body.email || !req.body.password)

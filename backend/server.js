@@ -1,10 +1,10 @@
-/*
-    @File: server.js
-    @Project: FitGlitch
-    @Author: John Miller
-    @Date: 2025-05
-    @Purpose: Sets up the Express server, MongoDB connection, middleware, CORS policy, routes, and error handling.
-*/
+/**
+ * @file server.js
+ * @project FitGlitch
+ * @author John Miller
+ * @date 2025-05
+ * @description Sets up the Express server, connects to MongoDB, configures middleware, CORS, routes, and error handling.
+ */
 
 require('dotenv').config();
 
