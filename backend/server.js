@@ -20,6 +20,8 @@ const cors = require('cors');
 require('./src/models/user');
 require('./src/models/db');
 require('./src/models/weight');
+require('./src/models/workout');
+require('./src/models/meal');
 require('./src/config/passport');
 
 // Load API routes

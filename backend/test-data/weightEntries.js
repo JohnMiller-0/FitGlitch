@@ -1,10 +1,3 @@
-/*
-    @File: weightEntries.js
-    @Project: FitGlitch
-    @Author: John Miller
-    @Date: 2025-05
-    @Purpose: This file contains test data for weight entries in the FitGlitch application, formatted as JSON objects.
-*/
 [
   {
     "weight": 196.4,

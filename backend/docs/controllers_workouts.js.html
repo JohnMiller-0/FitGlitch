@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/workouts.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/workouts.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file workouts.js
+ * @project FitGlitch
+ * @author John Miller
+ * @date 2025-05
+ * @description Controller functions for handling workout-related API requests.
+ */
+
+const Workout = require('../models/workout');
+
+/**
+ * Retrieves all workouts for a specific user on a given date.
+ * 
+ * @function getWorkoutsByDate
+ * @param {Object} req - Express request object, with `auth._id` and `params.date`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with a list of workouts or error message.
+ */
+const getWorkoutsByDate = async (req, res) => {
+    const userId = req.auth._id;
+    const baseDate = req.params.date;
+
+    // Normalize the date to UTC format
+    // This ensures that the date is treated as a full day, regardless of time zone
+    const startOfDay = new Date(`${baseDate}T00:00:00Z`);
+    const endOfDay = new Date(`${baseDate}T23:59:59.999Z`);
+
+    // Fetch workouts for the authenticated user within the specified date range
+    try {
+        const workouts = await Workout.find({
+            userId,
+            date: { $gte: startOfDay, $lte: endOfDay }
+        }).sort({ date: -1 });
+
+        res.status(200).json(workouts);
+    } catch (err) {
+        console.error("Error fetching workouts: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Adds a new workout entry for the authenticated user.
+ * 
+ * @function addWorkout
+ * @param {Object} req - Express request object with body containing `date`, `calories`, `type`, and optional `notes`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with the created workout or error message.
+ */
+const addWorkout = async (req, res) => {
+    const userId = req.auth._id;
+    const { date, calories, type, notes } = req.body;
+
+    if (!date || !calories || !type) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    // Create a new workout entry
+    try {
+        const newWorkout = new Workout({
+            userId,
+            date: new Date(date),
+            calories: parseInt(calories),
+            type,
+            notes: notes || ''
+        });
+
+        await newWorkout.save();
+        res.status(201).json(newWorkout);
+    } catch (err) {
+        console.error("Error adding workout: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Retrieves a specific workout by its ID for the authenticated user.
+ * 
+ * @function getWorkoutById
+ * @param {Object} req - Express request object with `params.id`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with the workout or error message.
+ */
+const getWorkoutById = async (req, res) => {
+    const userId = req.auth._id;
+    const { id } = req.params;
+
+    // Fetch the workout by ID for the authenticated user
+    try {
+        const workout = await Workout.findOne({ _id: id, userId });
+        if (!workout) {
+            return res.status(404).json({ message: 'Workout not found.' });
+        }
+        res.status(200).json(workout);
+    } catch (err) {
+        console.error("Error fetching workout: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Updates a specific workout entry for the authenticated user.
+ * 
+ * @function editWorkout
+ * @param {Object} req - Express request object with `params.id` and body containing updated fields.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with updated workout or error message.
+ */
+const editWorkout = async (req, res) => {
+    const userId = req.auth._id;
+    const { id } = req.params;
+    const { date, calories, type, notes } = req.body;
+
+    if (!date || !calories || !type) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    // Update the workout entry
+    try {
+        const workout = await Workout.findOneAndUpdate(
+            { _id: id, userId },
+            { date: new Date(date), calories: parseInt(calories), type, notes: notes || '' },
+            { new: true }
+        );
+
+        if (!workout) {
+            return res.status(404).json({ message: 'Workout not found.' });
+        }
+
+        res.status(200).json(workout);
+    } catch (err) {
+        console.error("Error editing workout: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Deletes a specific workout entry for the authenticated user.
+ * 
+ * @function deleteWorkout
+ * @param {Object} req - Express request object with `params.id`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response confirming deletion or error message.
+ */
+const deleteWorkout = async (req, res) => {
+    const userId = req.auth._id;
+    const { id } = req.params;
+
+    // Delete the workout entry by ID for the authenticated user
+    try {
+        const workout = await Workout.findOneAndDelete({ _id: id, userId });
+
+        if (!workout) {
+            return res.status(404).json({ message: 'Workout not found.' });
+        }
+
+        res.status(200).json(workout);
+    } catch (err) {
+        console.error("Error deleting workout: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+module.exports = {
+    getWorkoutsByDate,
+    addWorkout,
+    getWorkoutById,
+    editWorkout,
+    deleteWorkout
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addMeal">addMeal</a></li><li><a href="global.html#addWeight">addWeight</a></li><li><a href="global.html#addWorkout">addWorkout</a></li><li><a href="global.html#deleteMeal">deleteMeal</a></li><li><a href="global.html#deleteWeight">deleteWeight</a></li><li><a href="global.html#deleteWorkout">deleteWorkout</a></li><li><a href="global.html#editWeight">editWeight</a></li><li><a href="global.html#editWorkout">editWorkout</a></li><li><a href="global.html#getMealById">getMealById</a></li><li><a href="global.html#getMealsByDate">getMealsByDate</a></li><li><a href="global.html#getWeight">getWeight</a></li><li><a href="global.html#getWorkoutById">getWorkoutById</a></li><li><a href="global.html#getWorkoutsByDate">getWorkoutsByDate</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#normalizeToDateOnly">normalizeToDateOnly</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#updateMeal">updateMeal</a></li><li><a href="global.html#weightsList">weightsList</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 01 2025 17:47:46 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

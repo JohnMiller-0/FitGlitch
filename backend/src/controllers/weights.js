@@ -8,6 +8,7 @@
 
 
 const Weight = require('../models/weight');
+const { normalizeToDateOnly } = require('../utils/dateUtils');
 
 
 /**
@@ -18,12 +19,6 @@ const Weight = require('../models/weight');
  * @returns {Object[]} JSON array of weight entries or error response.
  */
 const weightsList = async (req, res) => {
-
-    // Check if the user is authenticated
-    if (!req.auth) {
-        return res.status(401).json({ message: 'Unauthorized — missing payload' });
-    }
-
     const userId = req.auth._id;
     
     // Uncomment the following line to log the user ID for debugging
@@ -90,11 +85,6 @@ const addWeight = async (req, res) => {
 const getWeight = async (req, res) => {
     const userId = req.auth._id;
     const weightId = req.params.id;
-
-    // Ensure the request is authenticated
-    if (!userId) {
-        return res.status(401).json({ message: 'Unauthorized — missing payload' });
-    }
 
     try {
         // Find the weight entry by ID and confirm it belongs to the authenticated user
@@ -183,19 +173,9 @@ const deleteWeight = async (req, res) => {
         console.error("Error deleting weight: ", err);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
-
-/**
- * Helper function: Normalize a date string to remove time component.
- * Converts to a Date object set to 00:00:00 local time.
- * @param {string} isoDate - ISO-formatted date string.
- * @returns {Date} Normalized Date object.
- */
-const normalizeToDateOnly = (isoDate) => {
-  const date = new Date(isoDate);
-  date.setHours(0, 0, 0, 0);
-  return date;
 };
+
+
 
 module.exports = {
     weightsList,
