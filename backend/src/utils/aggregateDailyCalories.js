@@ -27,22 +27,19 @@ const mongoose = require('mongoose');
  * ]
  */
 const aggregateMeals = async (Model, userId, startDate, endDate) => {
+  // Convert userId to ObjectId and ensure dates are in Date format
   const objectId = new mongoose.Types.ObjectId(userId);
-  const start = new Date(startDate);
-  const end = new Date(endDate);
 
   return await Model.aggregate([
     {
       $match: {
         userId: objectId,
-        date: { $gte: start, $lte: end }
+        date: { $gte: startDate, $lte: endDate }
       }
     },
     {
       $group: {
-        _id: {
-          $dateToString: { format: "%Y-%m-%d", date: "$date" }
-        },
+        _id: "$date",
         totalCalories: { $sum: "$calories" }
       }
     },

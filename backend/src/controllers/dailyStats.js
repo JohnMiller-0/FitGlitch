@@ -37,10 +37,7 @@ const User = require('../models/user');
  */
 const netDailyCalories = async (req, res) => {
   const userId = req.auth._id;
-  const { baseStart, baseEnd } = req.query;
-
-  const startDate = new Date(`${baseStart}T00:00:00Z`);
-  const endDate = new Date(`${baseEnd}T23:59:59.999Z`);
+  const { startDate, endDate } = req.query;
 
   // Validate date range
   if (!startDate || !endDate) {
@@ -75,7 +72,7 @@ const netDailyCalories = async (req, res) => {
         caloriesConsumed: totalCalories,
         caloriesBurned: workoutCalories,
         netCalories,
-        goal: user.calorieGoal,
+        goal: user.caloricGoal,
         difference: goalProgress
       };
     });

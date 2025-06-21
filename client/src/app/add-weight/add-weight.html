@@ -1,0 +1,35 @@
+<!-- Add Weight Form   -->
+<div class="form-container">
+    <div class="form-card">
+        <h2 class="text-center">Add Weight</h2>
+        <form *ngIf="addForm" [formGroup]="addForm" (ngSubmit)="addWeight()">
+            <!-- Form Controls -->
+             <!-- Weight Input -->
+            <div class="form-group">
+                <label>Weight:</label>
+                <input type="number" formControlName="weight" placeholder="0.0" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f['weight'].errors }">
+                <div *ngIf="submitted && f['weight'].errors">
+                    <div *ngIf="f['weight'].errors?.['required']">
+                        Weight is required
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Date Input -->
+            <div class="form-group">
+                <label>Date:</label>
+                <input type="date" formControlName="date" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f['date'].errors }">
+                <div *ngIf="submitted && f['date'].errors">
+                    <div *ngIf="f['date'].errors?.['required']"> 
+                        Date is required.
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-info">Add Weight</button>
+        </form>
+    </div>
+</div>

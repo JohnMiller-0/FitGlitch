@@ -1,0 +1,35 @@
+/* Home Dashboard Styles */
+
+.dashboard-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+.dashboard-section {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.25rem;
+}
+
+/* spacing between sections */
+.dashboard-section + .dashboard-section {
+  margin-top: 1.5rem;
+}
+
+.dashboard-section h4 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Optional: enhance the logout button */
+button.btn-outline-secondary {
+  cursor: pointer;
+}

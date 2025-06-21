@@ -8,8 +8,6 @@
 
 
 const Weight = require('../models/weight');
-const { normalizeToDateOnly } = require('../utils/dateUtils');
-
 
 /**
  * GET /api/weights
@@ -35,6 +33,29 @@ const weightsList = async (req, res) => {
 };
 
 /**
+ * GET /api/weights/recent
+ * Retrieves the most recent weight entry for the authenticated user.
+ * @param {Object} req - Express request object, must include `auth` with user ID.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON object of the most recent weight entry or error response. 
+ */
+const getMostRecentWeight = async (req, res) => {
+    const userId = req.auth._id;
+
+    // Fetch the most recent weight entry for the authenticated user
+    try {
+        const mostRecentWeight = await Weight.findOne({ userId }).sort({ date: -1 });
+        if (!mostRecentWeight) {
+            return res.status(404).json({ message: 'No weight entries found' });
+        }
+        res.status(200).json(mostRecentWeight);
+    } catch (err) {
+        console.error("Error fetching most recent weight: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
  * POST /api/weights
  * Adds a new weight entry for the authenticated user.
  * Enforces one entry per user per day via unique index on { userId, date }.
@@ -44,16 +65,13 @@ const weightsList = async (req, res) => {
  */
 const addWeight = async (req, res) => {
     const userId = req.auth._id;
-    var { weight, date } = req.body;
+    const { weight, date } = req.body;
     
-    // Normalize the date to remove time component
-    date = normalizeToDateOnly(date);
-
     // Check if all required fields are present
     // If any field is missing, return a 400 status with an error message
     if (!weight || !date) {
         return res.status(400).json({ message: 'All fields are required.' });
-    }
+    };
 
     // try to create a new weight entry
     // Enforces one weight entry per user per day via a compound unique index on { userId, date } in the Weight schema
@@ -72,8 +90,8 @@ const addWeight = async (req, res) => {
         }
         console.error("Error adding weight: ", err);
         res.status(500).json({ message: 'Internal server error' });
-    }
-}
+    };
+};
 
 /**
  * Retrieves a specific weight entry by ID for the authenticated user.
@@ -84,12 +102,13 @@ const addWeight = async (req, res) => {
  */
 const getWeight = async (req, res) => {
     const userId = req.auth._id;
-    const weightId = req.params.id;
+    const weightId = req.params.weightId;
 
     try {
         // Find the weight entry by ID and confirm it belongs to the authenticated user
-        const weight = await Weight.findOne({ _id: weightId, userId });
-
+        // DEBUG: Uncomment to log the user ID and date range being queried
+        // console.log("Fetching weight for user ID: ", userId, " on date: ", startDate, " and", endDate);
+        const weight = await Weight.findOne({ weightId, userId});
         if (!weight) {
             return res.status(404).json({ message: 'Weight not found' });
         }
@@ -101,7 +120,7 @@ const getWeight = async (req, res) => {
     } catch (err) {
         console.error("Error fetching weight: ", err);
         return res.status(500).json({ message: 'Internal server error' });
-    }
+    };
 };
 
 /**
@@ -116,8 +135,6 @@ const editWeight = async (req, res) => {
     const weightId = req.params.id;
     var { weight, date } = req.body;
 
-    date = normalizeToDateOnly(date);
-
     // Check if all required fields are present
     // If any field is missing, return a 400 status with an error message
     if (!weight || !date) {
@@ -127,9 +144,9 @@ const editWeight = async (req, res) => {
     // If the entry does not exist, return a 404 status with an error message
     try {
         const updatedWeight = await Weight.findOneAndUpdate(
-            { _id: weightId, userId },
-            { weight, date },
-            { new: true }
+            { _id: weightId, userId }, // Ensure the weight entry belongs to the authenticated user
+            { weight, date }, // Update the weight and date fields
+            { new: true } // Return the updated document
         );
 
         if (!updatedWeight) {
@@ -143,8 +160,8 @@ const editWeight = async (req, res) => {
     } catch (err) {
         console.error("Error updating weight: ", err);
         res.status(500).json({ message: 'Internal server error' });
-    }
-}
+    };
+};
 
 /**
  * DELETE /api/weights/:id
@@ -172,7 +189,7 @@ const deleteWeight = async (req, res) => {
     } catch (err) {
         console.error("Error deleting weight: ", err);
         res.status(500).json({ message: 'Internal server error' });
-    }
+    };
 };
 
 
@@ -182,6 +199,7 @@ module.exports = {
     addWeight,
     editWeight,
     deleteWeight,
-    getWeight
+    getWeight,
+    getMostRecentWeight
 };
     

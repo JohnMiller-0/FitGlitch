@@ -1,0 +1,77 @@
+<!-- Daily Stats Form  -->
+<div class="stats-container">
+  <form #dateForm="ngForm" (ngSubmit)="getStats(startDate.value, endDate.value)">
+    <!-- Start Date -->
+    <div class="form-group mb-3">
+      <label for="startDate">Start&nbsp;Date:</label>
+      <input
+        #startDate="ngModel"
+        id="startDate"
+        name="startDate"
+        type="date"
+        class="form-control"
+        [(ngModel)]="start"
+        required>
+    </div>
+
+    <!-- End Date (min is bound to start) -->
+    <div class="form-group mb-3">
+      <label for="endDate">End&nbsp;Date:</label>
+      <input
+        #endDate="ngModel"
+        id="endDate"
+        name="endDate"
+        type="date"
+        class="form-control"
+        [(ngModel)]="end"
+        [min]="start"
+        required>
+    </div>
+
+    <!-- Submit -->
+    <button
+      class="btn btn-primary w-100"
+      type="submit"
+      [disabled]="dateForm.invalid">
+      Fetch Daily Stats
+    </button>
+  </form>
+
+  <!-- Daily Stats Table -->
+  <div *ngIf="dailyStats?.length" class="stats-table mt-4">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Burned&nbsp;(kcal)</th>
+          <th>Consumed&nbsp;(kcal)</th>
+          <th>Net&nbsp;(kcal)</th>
+          <th>Goal&nbsp;(kcal)</th>
+          <th>Remaining&nbsp;(kcal)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stat of dailyStats">
+          <td>{{ stat.date | date:'yyyy-MM-dd' }}</td>
+          <td>{{ stat.caloriesBurned }}</td>
+          <td>{{ stat.caloriesConsumed }}</td>
+          <td>{{ stat.netCalories }}</td>
+          <td>{{ stat.goal }}</td>
+          <td
+            [ngClass]="{
+              'text-success': stat.difference >= 0,
+              'text-danger': stat.difference < 0
+            }"
+          >
+            {{ stat.difference }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty state -->
+  <p *ngIf="dailyStats && !dailyStats.length" class="text-muted mt-4">
+    No data found for the selected range.
+  </p>
+</div>

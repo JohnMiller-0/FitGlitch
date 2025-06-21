@@ -31,30 +31,30 @@ const register = async (req, res) => {
     // Uncomment the following line to log the request body for debugging
     // console.log("Register route hit");
 
-    const { email, password, goalWeight, caloricGoal, loseWeight } = req.body;
+    const { email, password, goalWeight, caloricGoal, loseWeight } = req.body; // Destructure the request body to get user data
     if (!email || !password || !goalWeight || !caloricGoal || loseWeight === undefined) {
-        return res.status(400).json({ message: 'All fields are required.' });
+        return res.status(400).json({ message: 'All fields are required.' }); // Check if all required fields are provided
     } else if (password.length < 6) {
-        return res.status(400).json({ message: 'Password must be at least 6 characters long.' });
+        return res.status(400).json({ message: 'Password must be at least 6 characters long.' }); // Validate password length
     }
 
-    const user = new User();
-    user.email = email;
-    user.goalWeight = goalWeight;
-    user.caloricGoal = caloricGoal;
-    user.loseWeight = loseWeight;
+    const user = new User(); // Create a new User instance
+    user.email = email; // Set the user's email
+    user.goalWeight = goalWeight; // Set the user's goal weight
+    user.caloricGoal = caloricGoal; // Set the user's daily caloric goal
+    user.loseWeight = loseWeight; // Set the user's weight loss preference
     // Hash the password before saving
     await user.setPassword(password);
 
     try {
-        await user.save();
-        const token = user.generateJWT();
-        return res.status(200).json({ token });
+        await user.save(); // Save the user to the database
+        const token = user.generateJWT(); // Generate a JWT token for the user
+        return res.status(200).json({ token }); // Return the token in the response
     } catch (err) {
         if (err.code === 11000) {
-            return res.status(400).json({ message: 'Email already exists' });
+            return res.status(400).json({ message: 'Email already exists' }); // Handle duplicate email error
         }
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' }); // Handle other server errors
     };
 
 };
@@ -77,31 +77,62 @@ const login = async (req, res) => {
 
      if(!req.body.email || !req.body.password)
     {
-        return res.status(400).json({"message" : "All fields are required."});
+        return res.status(400).json({"message" : "All fields are required."}); // Check if email and password are provided
     }
     
     passport.authenticate('local', (err, user, info) => {
         if(err)
         {
             console.log(err);
-            return res.status(400).json(err);
+            return res.status(400).json(err); // Handle any errors that occurred during authentication
         }
             
         if(user)
         {
-            const token = user.generateJWT();
+            const token = user.generateJWT(); // Generate a JWT token for the authenticated user
             
             // Uncomment the following lines to log the user and token for debugging
             // console.log("User authenticated successfully");
             // console.log("Token generated: ", token);
             
-            return res.status(200).json({token});
+            return res.status(200).json({token}); // Return the token in the response
         } else {
-            return res.status(401).json(info);
-        } }) (req, res);
+            return res.status(401).json(info); // Return 401 Unauthorized if authentication fails
+        }
+    })(req, res);
+};
+
+/** * Retrieves user information including email.
+ * - Uses the user ID from the request object to find the user info.
+ * - Populates the userId field with the user's email.
+ * 
+ * @function
+ * @param {Object} req - Express request object, populated with user data by Passport.js.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON object with user info or error message.
+ */
+const getUserInfo = async (req, res) => {
+    const userId = req.auth._id; // Get user ID from the authenticated request
+    console.log("User ID from request:", userId); // Log the user ID for debugging
+    try {
+        const user = await User.findById(userId).select('goalWeight caloricGoal loseWeight');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' }); // Return 404 if user does not exist
+        }
+        const userInfo = {
+            goalWeight: user.goalWeight,
+            caloricGoal: user.caloricGoal,
+            loseWeight: user.loseWeight
+        };
+        return res.status(200).json(userInfo); // Return user info
+    } catch (err) {
+        console.error(err); // Log the error for debugging
+        return res.status(500).json({ message: 'Internal server error' }); // Return 500 for server errors
+    }
 };
 
 module.exports = {
     register,
-    login
+    login,
+    getUserInfo
 };

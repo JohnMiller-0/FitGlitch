@@ -32,6 +32,10 @@ router
     .route('/register')
     .post(authController.register);
 
+// User info route (requires JWT authentication)
+router
+    .route('/userinfo')
+    .get(auth, authController.getUserInfo);
 
 // Weight routes (requires JWT authentication)
 router
@@ -51,11 +55,11 @@ router
     .post(auth, workoutController.addWorkout);
 
 router
-    .route('/workouts/:date')
+    .route('/workouts/date/:date')
     .get(auth, workoutController.getWorkoutsByDate);
 
 router
-    .route('/workout/:id')
+    .route('/workouts/:id')
     .get(auth, workoutController.getWorkoutById)
     .put(auth, workoutController.editWorkout)
     .delete(auth, workoutController.deleteWorkout);
@@ -66,18 +70,18 @@ router
     .post(auth, mealController.addMeal);
 
 router
-    .route('/meals/:date')
+    .route('/meals/date/:date')
     .get(auth, mealController.getMealsByDate);
 
 router
-    .route('/meal/:id')
+    .route('/meals/:id')
     .get(auth, mealController.getMealById)
     .put(auth, mealController.updateMeal)
     .delete(auth, mealController.deleteMeal);
 
 // Daily stats route (requires JWT authentication)
 router
-    .route('/net-calories')
+    .route('/stats')
     .get(auth, dailyStatsController.netDailyCalories);
 
 

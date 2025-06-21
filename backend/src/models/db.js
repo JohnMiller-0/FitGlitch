@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const readline = require('readline');
 
 const host = process.env.DB_HOST || '127.0.0.1';
-const dbURI = `mongodb://${host}/fitglitch`;
+const dbURI = process.env.MONGO_URI || `mongodb://${host}/fitglitch`;
 
 // Connect to MongoDB
 // Use the MongoDB URI from environment variables or default to localhost

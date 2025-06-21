@@ -18,18 +18,13 @@ const Meal = require('../models/meal');
  */
 const getMealsByDate = async (req, res) => {
     const userId = req.auth._id;
-    const baseDate = req.params.date;
-
-    // Normalize the date to UTC format
-    // This ensures that the date is treated as a full day, regardless of time zone
-    const startOfDay = new Date(`2025-05-28T00:00:00Z`);
-    const endOfDay = new Date(`2025-05-30T23:59:59.999Z`);
-
+    const date = req.params.date;
+    
     // Fetch meals for the authenticated user within the specified date range
     try {
         const meals = await Meal.find({
             userId,
-            date: { $gte: startOfDay, $lte: endOfDay }
+            date: date
         }).sort({ date: 1 });
 
         res.status(200).json(meals);
@@ -49,18 +44,18 @@ const getMealsByDate = async (req, res) => {
  */
 const addMeal = async (req, res) => {
     const userId = req.auth._id;
-    const { date, name, calories, notes } = req.body;
+    let { date, name, calories, notes } = req.body;
+
 
     if (!date || !calories || !name) {
         return res.status(400).json({ message: 'All fields are required.' });
     }
 
-
     // Try to create a new meal entry
     try {
         const newMeal = new Meal({
             userId,
-            date: new Date(date),
+            date: date,
             name,
             calories: parseInt(calories),
             notes: notes || ''
@@ -117,7 +112,7 @@ const updateMeal = async (req, res) => {
     try {
         const updatedMeal = await Meal.findOneAndUpdate(
             { _id: mealId, userId },
-            { date: new Date(date), name, calories: parseInt(calories), notes },
+            { date, name, calories: parseInt(calories), notes },
             { new: true }
         );
 
@@ -146,16 +141,16 @@ const deleteMeal = async (req, res) => {
 
     // Try to delete the meal entry
     try {
-        const deletedMeal = await Meal.findOneAndDelete({ _id: mealId, userId });
+        const deletedMeal = await Meal.findOneAndDelete({ _id: mealId, userId }); // Find and delete the meal by ID and user ID
 
         if (!deletedMeal) {
-            return res.status(404).json({ message: 'Meal not found.' });
+            return res.status(404).json({ message: 'Meal not found.' }); // If no meal is found, return 404
         }
 
-        res.status(200).json({ message: 'Meal deleted successfully.' });
+        res.status(200).json({ message: 'Meal deleted successfully.' }); // Return success message
     } catch (err) {
-        console.error("Error deleting meal: ", err);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error("Error deleting meal: ", err); // Log the error for debugging
+        res.status(500).json({ message: 'Internal server error' }); // Return 500 for server errors
     }
 };
 

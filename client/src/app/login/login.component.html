@@ -1,1 +1,45 @@
-<p>login works!</p>
+<!-- Login Form -->
+<div class="login-container">
+  <div class="login-card">
+    <h2 class="text-center mb-4">Login</h2>
+    <form [formGroup]="credentials" (ngSubmit)="onLoginSubmit()">
+      <div role="alert" *ngIf="formError" class="alert alert-danger">
+        {{ formError }}
+      </div>
+      <!-- Form Controls -->
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter email address" formControlName="email"
+          class="form-control" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+        <div *ngIf="submitted && f['email'].invalid">
+          <div *ngIf="f['email'].errors?.['required']">
+            Email is required.
+          </div>
+          <div *ngIf="f['email'].errors?.['email']">
+            Invalid email format.
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" placeholder="e.g 12+ alphanumerics"
+          formControlName="password">
+        <div *ngIf="submitted && f['password'].invalid">
+          <div *ngIf="f['password'].errors?.['required']">
+            Password is required.
+          </div>
+          <div *ngIf="f['password'].errors?.['minlength']">
+            Password must be at least 6 characters.
+          </div>
+        </div>
+      </div>
+      <button type="submit" role="button" class="btn btn-primary w-100 mt-3">Sign In!</button>
+      <button type="button" role="button" class="btn btn-link w-100 mt-2" (click)="onRegisterSubmit()">Don't have an
+        account? Register</button>
+    </form>
+  </div>
+
+</div>

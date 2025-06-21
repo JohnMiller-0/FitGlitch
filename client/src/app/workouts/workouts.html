@@ -1,0 +1,12 @@
+<div class="workout-container">
+  <button (click)="addWorkout()" class="btn btn-primary">Add Workout</button>
+
+  <div class="workout-list">
+    <div *ngFor="let workout of workouts" class="workout-entry">
+      Workout: {{ workout.type }} — {{ workout.calories }} kcal
+      <span *ngIf="workout.notes" class="notes"> — {{ workout.notes }}</span>
+      <button (click)="editWorkout(workout._id)">Edit</button>
+      <button (click)="deleteWorkout(workout._id)">Delete</button>
+    </div>
+  </div>
+</div>

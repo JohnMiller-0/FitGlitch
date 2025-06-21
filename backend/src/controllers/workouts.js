@@ -18,18 +18,15 @@ const Workout = require('../models/workout');
  */
 const getWorkoutsByDate = async (req, res) => {
     const userId = req.auth._id;
-    const baseDate = req.params.date;
+    const date = req.params.date;
 
-    // Normalize the date to UTC format
-    // This ensures that the date is treated as a full day, regardless of time zone
-    const startOfDay = new Date(`${baseDate}T00:00:00Z`);
-    const endOfDay = new Date(`${baseDate}T23:59:59.999Z`);
+    console.log("Fetching workouts for user ID: ", userId, " on date: ", date);
 
     // Fetch workouts for the authenticated user within the specified date range
     try {
         const workouts = await Workout.find({
             userId,
-            date: { $gte: startOfDay, $lte: endOfDay }
+            date: date
         }).sort({ date: -1 });
 
         res.status(200).json(workouts);
@@ -59,7 +56,7 @@ const addWorkout = async (req, res) => {
     try {
         const newWorkout = new Workout({
             userId,
-            date: new Date(date),
+            date: date,
             calories: parseInt(calories),
             type,
             notes: notes || ''
@@ -84,6 +81,7 @@ const addWorkout = async (req, res) => {
 const getWorkoutById = async (req, res) => {
     const userId = req.auth._id;
     const { id } = req.params;
+    console.log("Fetching workout with ID: ", id);
 
     // Fetch the workout by ID for the authenticated user
     try {
@@ -114,12 +112,13 @@ const editWorkout = async (req, res) => {
     if (!date || !calories || !type) {
         return res.status(400).json({ message: 'All fields are required.' });
     }
+ 
 
     // Update the workout entry
     try {
         const workout = await Workout.findOneAndUpdate(
             { _id: id, userId },
-            { date: new Date(date), calories: parseInt(calories), type, notes: notes || '' },
+            { date: date, calories: parseInt(calories), type, notes: notes || '' },
             { new: true }
         );
 

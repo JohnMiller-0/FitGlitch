@@ -27,21 +27,21 @@ passport.use(new LocalStrategy(
       // console.log("Passport strategy triggered with:", username);
       
       try {
-        const user = await User.findOne({ email: username });
+        const user = await User.findOne({ email: username }); // Find user by email
   
         if (!user) {
-          return done(null, false, { message: 'Incorrect username.' });
+          return done(null, false, { message: 'Incorrect username.' }); // User not found
         }
   
-        const isValid = await user.validatePassword(password);
+        const isValid = await user.validatePassword(password); // Validate the password
 
         if (!isValid) {
-          return done(null, false, { message: 'Incorrect password.' });
+          return done(null, false, { message: 'Incorrect password.' }); // Password is invalid
         }
 
-        return done(null, user);
+        return done(null, user); // Authentication successful, return user object
       } catch (err) {
-        return done(err);
+        return done(err); // Handle any errors that occurred during the process
       }
     }
   ));

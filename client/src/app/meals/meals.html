@@ -1,0 +1,12 @@
+<div class="meal-container">
+  <button (click)="addMeal()" class="btn btn-primary">Add Meal</button>
+
+  <ul class="meal-list">
+    <div *ngFor="let meal of meals" class="meal-entry">
+      Meal: {{ meal.name }} — {{ meal.calories }} kcal
+      <span *ngIf="meal.notes" class="notes"> — {{ meal.notes }}</span>
+      <button (click)="editMeal(meal._id)">Edit</button>
+      <button (click)="deleteMeal(meal._id)">Delete</button>
+    </div>
+  </ul>
+</div>

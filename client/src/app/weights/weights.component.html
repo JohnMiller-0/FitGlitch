@@ -1,1 +1,12 @@
-<p>weights works!</p>
+<!-- weight-list.component.html -->
+<div class="weight-container">
+  <button (click)="addWeight()">Add Weight</button>
+
+  <div class="weight-list">
+    <div *ngFor="let weight of weights" class="weight-entry">
+      <span>{{ weight.date | date: 'MMM d, y' }} — {{ weight.weight }} lbs</span>
+      <button (click)="editWeight(weight._id)">✏️</button>
+      <button (click)="deleteWeight(weight._id)">🗑️</button>
+    </div>
+  </div>
+</div>
