@@ -10,6 +10,7 @@ import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { Workout } from "../models/workout";
 import { CreateWorkout } from "../models/createWorkout";
+import { environment } from "../../environments/environment";
 
 /**
  * @service WorkoutService
@@ -22,7 +23,7 @@ import { CreateWorkout } from "../models/createWorkout";
     providedIn: 'root'
 })
 export class WorkoutService {
-    private apiBaseUrl = 'http://localhost:3000/api/workouts'; // Base URL for the API endpoints
+    private apiBaseUrl = `${environment.apiUrl}/workouts`; // Base URL for the workouts API, defined in the environment configuration
 
     /**
      * Constructor for the WorkoutService.

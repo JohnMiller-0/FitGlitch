@@ -10,6 +10,7 @@ import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { Weight } from "../models/weight";
 import { CreateWeight } from "../models/createWeight";
+import { environment } from "../../environments/environment";
 
 /**
  * @service WeightService
@@ -22,7 +23,7 @@ import { CreateWeight } from "../models/createWeight";
     providedIn: 'root'
 })
 export class WeightService {
-    private apiBaseUrl = 'http://localhost:3000/api/weights'; // Base URL for the API endpoints
+    private apiBaseUrl = `${environment.apiUrl}/weights`; // Base URL for the weights API, defined in the environment configuration
 
     /**
      * Constructor for the WeightService.

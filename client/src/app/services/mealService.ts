@@ -10,6 +10,7 @@ import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { Meal } from "../models/meal";
 import { CreateMeal } from "../models/createMeal";
+import { environment } from "../../environments/environment";
 
 /**
  * @service MealService
@@ -22,8 +23,8 @@ import { CreateMeal } from "../models/createMeal";
     providedIn: 'root'
 })
 export class MealService {
-    private apiBaseUrl = 'http://localhost:3000/api/meals'; // Base URL for the API endpoints
-
+    apiBaseUrl: string = environment.apiUrl + '/meals'; // Base URL for the meals API, defined in the environment configuration
+    
     /**
      * Constructor for the MealService.
      * @param http - Angular's HttpClient service for making HTTP requests.

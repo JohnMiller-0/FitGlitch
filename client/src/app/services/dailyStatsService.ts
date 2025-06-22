@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { DailyStat } from '../models/dailyStat';
+import { environment } from '../../environments/environment';
 
 /**
  * @service DailyStatsService
@@ -20,8 +21,7 @@ import { DailyStat } from '../models/dailyStat';
     providedIn: 'root'
 })
 export class DailyStatsService {
-    private apiBaseUrl = 'http://localhost:3000/api/stats'; // Base URL for the API endpoints
-
+    apiBaseUrl: string = environment.apiUrl + '/stats'; // Base URL for the daily stats API, defined in the environment configuration
     /**
      * Constructor for the DailyStatsService.
      * @param http - Angular's HttpClient service for making HTTP requests.

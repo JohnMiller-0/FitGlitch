@@ -9,8 +9,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { User } from "../models/user";
-import { DailyStat } from "../models/dailyStat";
-import { Weight } from "../models/weight";
+import { environment } from "../../environments/environment";
+
 /**
  * @service UserInfoService
  * @description
@@ -21,7 +21,7 @@ import { Weight } from "../models/weight";
     providedIn: 'root'
 })
 export class UserInfoService {
-    private apiBaseUrl = 'http://localhost:3000/api/userinfo'; // Base URL for the API endpoints
+    private apiBaseUrl = `${environment.apiUrl}/userinfo`; // Base URL for the user API, defined in the environment configuration
 
     constructor(private http: HttpClient) {}
 

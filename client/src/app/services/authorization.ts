@@ -10,6 +10,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { AuthResponse } from '../models/authResponse';
 import { LoginPayload } from '../models/LoginPayload';
 import { RegisterPayload } from '../models/RegisterPayload';
@@ -34,11 +35,12 @@ export class AuthorizationService {
    * The AuthorizationService constructor initializes the service with the HttpClient.
    */
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+
   ) {}
 
 
-  private apiBaseUrl = 'http://localhost:3000/api'; // Base URL for the API endpoints
+  apiBaseUrl: string = environment.apiUrl; // Base URL for the API, defined in the environment configuration
 
   /**
    * Handles errors that occur during API calls.
