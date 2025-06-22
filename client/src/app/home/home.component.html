@@ -1,0 +1,46 @@
+<!-- Logout button (visible only when authenticated) -->
+<div class="d-flex justify-content-end mb-2" *ngIf="authService.isLoggedIn()">
+  <button class="btn btn-outline-secondary" (click)="logout()">Logout</button>
+</div>
+
+<ng-container *ngIf="authService.isLoggedIn(); else loginBlock">
+  <div class="dashboard-container">
+    <h2 class="text-center my-3">Home</h2>
+    <p class="text-center">Welcome to your personal health dashboard!</p>
+
+    <!-- Daily Summary -->
+    <section class="dashboard-section mb-4">
+      <h4>Daily Summary</h4>
+      <app-daily-summary></app-daily-summary>
+    </section>
+
+    <!-- Caloric History -->
+    <section class="dashboard-section mb-4">
+      <h4>Caloric History</h4>
+      <app-daily-stats></app-daily-stats>
+    </section>
+
+    <!-- Meals -->
+    <section class="dashboard-section mb-4">
+      <h4>Meals</h4>
+      <app-meals></app-meals>
+    </section>
+
+    <!-- Workouts -->
+    <section class="dashboard-section mb-4">
+      <h4>Workouts</h4>
+      <app-workouts></app-workouts>
+    </section>
+
+    <!-- Weights -->
+    <section class="dashboard-section mb-4">
+      <h4>Weight Tracker</h4>
+      <app-weights></app-weights>
+    </section>
+  </div>
+</ng-container>
+
+<!-- Shown when the user is NOT logged in -->
+<ng-template #loginBlock>
+  <app-login></app-login>
+</ng-template>

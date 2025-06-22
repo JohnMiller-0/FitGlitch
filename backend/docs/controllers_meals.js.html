@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/meals.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/meals.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file meals.js
+ * @project FitGlitch
+ * @author John Miller
+ * @date 2025-05
+ * @description Controller functions for handling meal-related API requests.
+ */
+
+const Meal = require('../models/meal');
+
+/**
+ * Retrieves all meals for a specific user on a given date.
+ * 
+ * @function getMealsByDate
+ * @param {Object} req - Express request object containing `auth._id` and `params.date`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with a list of meals or an error message.
+ */
+const getMealsByDate = async (req, res) => {
+    const userId = req.auth._id;
+    const baseDate = req.params.date;
+
+    // Normalize the date to UTC format
+    // This ensures that the date is treated as a full day, regardless of time zone
+    const startOfDay = new Date(`2025-05-28T00:00:00Z`);
+    const endOfDay = new Date(`2025-05-30T23:59:59.999Z`);
+
+    // Fetch meals for the authenticated user within the specified date range
+    try {
+        const meals = await Meal.find({
+            userId,
+            date: { $gte: startOfDay, $lte: endOfDay }
+        }).sort({ date: 1 });
+
+        res.status(200).json(meals);
+    } catch (err) {
+        console.error("Error fetching meals: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Adds a new meal entry for the authenticated user.
+ * 
+ * @function addMeal
+ * @param {Object} req - Express request object with body containing `date`, `name`, `calories`, and optional `notes`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with the created meal or an error message.
+ */
+const addMeal = async (req, res) => {
+    const userId = req.auth._id;
+    const { date, name, calories, notes } = req.body;
+
+    if (!date || !calories || !name) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+
+    // Try to create a new meal entry
+    try {
+        const newMeal = new Meal({
+            userId,
+            date: new Date(date),
+            name,
+            calories: parseInt(calories),
+            notes: notes || ''
+        });
+
+        await newMeal.save();
+        res.status(201).json(newMeal);
+    } catch (err) {
+        console.error("Error adding meal: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Retrieves a specific meal by its ID for the authenticated user.
+ * 
+ * @function getMealById
+ * @param {Object} req - Express request object containing `params.id`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with the meal data or an error message.
+ */
+const getMealById = async (req, res) => {
+    const userId = req.auth._id;
+    const mealId = req.params.id;
+
+    try {
+        const meal = await Meal.findOne({ _id: mealId, userId });
+
+        if (!meal) {
+            return res.status(404).json({ message: 'Meal not found.' });
+        }
+
+        res.status(200).json(meal);
+    } catch (err) {
+        console.error("Error fetching meal by ID: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Updates a specific meal entry for the authenticated user.
+ * 
+ * @function updateMeal
+ * @param {Object} req - Express request object with `params.id` and updated fields in body.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with the updated meal or an error message.
+ */
+const updateMeal = async (req, res) => {
+    const userId = req.auth._id;
+    const mealId = req.params.id;
+    const { date, name, calories, notes } = req.body;
+
+    // Try to update the meal entry
+    try {
+        const updatedMeal = await Meal.findOneAndUpdate(
+            { _id: mealId, userId },
+            { date: new Date(date), name, calories: parseInt(calories), notes },
+            { new: true }
+        );
+
+        if (!updatedMeal) {
+            return res.status(404).json({ message: 'Meal not found.' });
+        }
+
+        res.status(200).json(updatedMeal);
+    } catch (err) {
+        console.error("Error updating meal: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Deletes a specific meal entry for the authenticated user.
+ * 
+ * @function deleteMeal
+ * @param {Object} req - Express request object with `params.id`.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response confirming deletion or an error message.
+ */
+const deleteMeal = async (req, res) => {
+    const userId = req.auth._id;
+    const mealId = req.params.id;
+
+    // Try to delete the meal entry
+    try {
+        const deletedMeal = await Meal.findOneAndDelete({ _id: mealId, userId });
+
+        if (!deletedMeal) {
+            return res.status(404).json({ message: 'Meal not found.' });
+        }
+
+        res.status(200).json({ message: 'Meal deleted successfully.' });
+    } catch (err) {
+        console.error("Error deleting meal: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+module.exports = {
+    getMealsByDate,
+    addMeal,
+    getMealById,
+    updateMeal,
+    deleteMeal
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addMeal">addMeal</a></li><li><a href="global.html#addWeight">addWeight</a></li><li><a href="global.html#addWorkout">addWorkout</a></li><li><a href="global.html#aggregateMeals">aggregateMeals</a></li><li><a href="global.html#deleteMeal">deleteMeal</a></li><li><a href="global.html#deleteWeight">deleteWeight</a></li><li><a href="global.html#deleteWorkout">deleteWorkout</a></li><li><a href="global.html#editWeight">editWeight</a></li><li><a href="global.html#editWorkout">editWorkout</a></li><li><a href="global.html#getMealById">getMealById</a></li><li><a href="global.html#getMealsByDate">getMealsByDate</a></li><li><a href="global.html#getWeight">getWeight</a></li><li><a href="global.html#getWorkoutById">getWorkoutById</a></li><li><a href="global.html#getWorkoutsByDate">getWorkoutsByDate</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#netDailyCalories">netDailyCalories</a></li><li><a href="global.html#normalizeToDateOnly">normalizeToDateOnly</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#updateMeal">updateMeal</a></li><li><a href="global.html#weightsList">weightsList</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 01 2025 22:14:18 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

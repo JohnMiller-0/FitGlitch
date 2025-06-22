@@ -1,0 +1,74 @@
+<!-- Register Form -->
+<div class="register-container">
+  <div class="register-card">
+    <h2 class="text-center mb-4">Register New User</h2>
+    <form *ngIf="addForm" [formGroup]="addForm" (ngSubmit)="onSubmit()">
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label>Enter Email:</label>
+        <input type="email" formControlName="email"
+               placeholder="Email@example.com" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+        <div *ngIf="submitted && f['email'].errors">
+          <div *ngIf="f['email'].errors?.['required']">Email is required</div>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label>Password:</label>
+        <input type="password" formControlName="password"
+               placeholder="Password" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
+        <div *ngIf="submitted && f['password'].errors">
+          <div *ngIf="f['password'].errors?.['required']">Password is required.</div>
+        </div>
+      </div>
+
+     <!-- Goal Weight Field -->
+      <div class="form-group">
+        <label>Goal Weight:</label>
+        <input type="number" formControlName="goalWeight"
+               placeholder="0.0" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f['goalWeight'].errors }">
+        <div *ngIf="submitted && f['goalWeight'].errors">
+          <div *ngIf="f['goalWeight'].errors?.['required']">Goal Weight is required.</div>
+        </div>
+      </div>
+
+       <!-- Caloric Goal Field -->
+      <div class="form-group">
+        <label>Daily Calorie Goal:</label>
+        <input type="number" formControlName="caloricGoal"
+               placeholder="0.0" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f['caloricGoal'].errors }">
+        <div *ngIf="submitted && f['caloricGoal'].errors">
+          <div *ngIf="f['caloricGoal'].errors?.['required']">Calorie Goal is required.</div>
+        </div>
+      </div>
+
+      <!-- Lose Weight Field -->
+      <div class="form-group">
+        <label>Do you want to lose weight?</label>
+        <select formControlName="loseWeight" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['loseWeight'].errors }">
+          <option value="">Select an option</option>
+          <option [value]="true">Yes</option>
+          <option [value]="false">No</option>
+        </select>
+        <div *ngIf="submitted && f['loseWeight'].errors">
+          <div *ngIf="f['loseWeight'].errors?.['required']">Selection is required.</div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-info w-100 mt-3">Register</button>
+    </form>
+
+    <!-- Form Submission Error -->
+    <div *ngIf="formError" class="toast error mt-3">
+      {{ formError }}
+    </div>
+  </div>
+</div>

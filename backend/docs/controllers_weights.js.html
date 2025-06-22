@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/weights.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/weights.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file weights.js
+ * @project FitGlitch
+ * @author John Miller
+ * @date 2025-05
+ * @description Controller functions for handling weight-related API requests.
+ */
+
+
+const Weight = require('../models/weight');
+const { normalizeToDateOnly } = require('../utils/dateUtils');
+
+
+/**
+ * GET /api/weights
+ * Retrieves a list of weight entries for the authenticated user.
+ * @param {Object} req - Express request object, must include `auth` with user ID.
+ * @param {Object} res - Express response object.
+ * @returns {Object[]} JSON array of weight entries or error response.
+ */
+const weightsList = async (req, res) => {
+    const userId = req.auth._id;
+    
+    // Uncomment the following line to log the user ID for debugging
+    // console.log("User ID: ", userId);
+
+    // Fetch the weights for the authenticated user from the database
+    try {
+        const weights = await Weight.find({ userId }).sort({ date: -1 });
+        res.status(200).json(weights);
+    } catch (err) {
+        console.error("Error fetching weights: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * POST /api/weights
+ * Adds a new weight entry for the authenticated user.
+ * Enforces one entry per user per day via unique index on { userId, date }.
+ * @param {Object} req - Express request object with weight and date in body.
+ * @param {Object} res - Express response object.
+ * @returns {Object} Newly created weight entry or error response.
+ */
+const addWeight = async (req, res) => {
+    const userId = req.auth._id;
+    var { weight, date } = req.body;
+    
+    // Normalize the date to remove time component
+    date = normalizeToDateOnly(date);
+
+    // Check if all required fields are present
+    // If any field is missing, return a 400 status with an error message
+    if (!weight || !date) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    // try to create a new weight entry
+    // Enforces one weight entry per user per day via a compound unique index on { userId, date } in the Weight schema
+    // If the entry already exists, return a 409 status with an error message
+    try {
+        const newWeight = new Weight({ userId, weight, date });
+        await newWeight.save();
+        
+        // Uncomment the following line to log the new weight for debugging
+        // console.log("New weight added: ", newWeight);
+        
+        res.status(201).json(newWeight);
+    } catch (err) {
+        if (err.code === 11000) {
+            return res.status(409).json({ message: 'Weight entry already exists for this date' });
+        }
+        console.error("Error adding weight: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+/**
+ * Retrieves a specific weight entry by ID for the authenticated user.
+ *
+ * @param {Object} req - The request object containing auth info and route parameters.
+ * @param {Object} res - The response object used to return data or error messages.
+ * @returns {Object} - JSON response with the weight entry or an error message.
+ */
+const getWeight = async (req, res) => {
+    const userId = req.auth._id;
+    const weightId = req.params.id;
+
+    try {
+        // Find the weight entry by ID and confirm it belongs to the authenticated user
+        const weight = await Weight.findOne({ _id: weightId, userId });
+
+        if (!weight) {
+            return res.status(404).json({ message: 'Weight not found' });
+        }
+
+        // DEBUG: Uncomment to log retrieved weight entry
+        // console.log("Weight fetched: ", weight);
+        
+        return res.status(200).json(weight);
+    } catch (err) {
+        console.error("Error fetching weight: ", err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * PUT /api/weights/:id
+ * Updates an existing weight entry for the authenticated user.
+ * @param {Object} req - Express request object with updated weight and date.
+ * @param {Object} res - Express response object.
+ * @returns {Object} Updated weight entry or error response.
+ */
+const editWeight = async (req, res) => {
+    const userId = req.auth._id;
+    const weightId = req.params.id;
+    var { weight, date } = req.body;
+
+    date = normalizeToDateOnly(date);
+
+    // Check if all required fields are present
+    // If any field is missing, return a 400 status with an error message
+    if (!weight || !date) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+    // try to update the weight entry
+    // If the entry does not exist, return a 404 status with an error message
+    try {
+        const updatedWeight = await Weight.findOneAndUpdate(
+            { _id: weightId, userId },
+            { weight, date },
+            { new: true }
+        );
+
+        if (!updatedWeight) {
+            return res.status(404).json({ message: 'Weight not found' });
+        }
+        
+        // Uncomment the following line to log the updated weight for debugging
+        // console.log("Weight updated: ", updatedWeight);
+        
+        res.status(200).json(updatedWeight);
+    } catch (err) {
+        console.error("Error updating weight: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+/**
+ * DELETE /api/weights/:id
+ * Deletes a weight entry for the authenticated user.
+ * @param {Object} req - Express request object with weight ID in params.
+ * @param {Object} res - Express response object.
+ * @returns {Object} Deleted weight entry or error response.
+ */
+const deleteWeight = async (req, res) => {
+    const userId = req.auth._id;
+    const weightId = req.params.id;
+
+    // try to delete the weight entry
+    // If the entry does not exist, return a 404 status with an error message
+    try {
+        const deletedWeight = await Weight.findOneAndDelete({ _id: weightId, userId });
+
+        if (!deletedWeight) {
+            return res.status(404).json({ message: 'Weight not found' });
+        }
+        // Uncomment the following line to log the deleted weight for debugging
+        // console.log("Weight deleted: ", deletedWeight);
+        
+        res.status(200).json(deletedWeight);
+    } catch (err) {
+        console.error("Error deleting weight: ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
+module.exports = {
+    weightsList,
+    addWeight,
+    editWeight,
+    deleteWeight,
+    getWeight
+};
+    </code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addMeal">addMeal</a></li><li><a href="global.html#addWeight">addWeight</a></li><li><a href="global.html#addWorkout">addWorkout</a></li><li><a href="global.html#aggregateMeals">aggregateMeals</a></li><li><a href="global.html#deleteMeal">deleteMeal</a></li><li><a href="global.html#deleteWeight">deleteWeight</a></li><li><a href="global.html#deleteWorkout">deleteWorkout</a></li><li><a href="global.html#editWeight">editWeight</a></li><li><a href="global.html#editWorkout">editWorkout</a></li><li><a href="global.html#getMealById">getMealById</a></li><li><a href="global.html#getMealsByDate">getMealsByDate</a></li><li><a href="global.html#getWeight">getWeight</a></li><li><a href="global.html#getWorkoutById">getWorkoutById</a></li><li><a href="global.html#getWorkoutsByDate">getWorkoutsByDate</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#netDailyCalories">netDailyCalories</a></li><li><a href="global.html#normalizeToDateOnly">normalizeToDateOnly</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#updateMeal">updateMeal</a></li><li><a href="global.html#weightsList">weightsList</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 01 2025 22:14:18 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

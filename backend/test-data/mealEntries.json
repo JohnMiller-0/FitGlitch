@@ -1,0 +1,94 @@
+[
+  {
+    "date": "2025-05-28T08:00:00Z",
+    "name": "Breakfast",
+    "calories": 500,
+    "notes": "Omelet, avocado toast, and coffee."
+  },
+  {
+    "date": "2025-05-28T12:30:00Z",
+    "name": "Lunch",
+    "calories": 680,
+    "notes": "Quinoa bowl with black beans and chicken."
+  },
+  {
+    "date": "2025-05-28T15:00:00Z",
+    "name": "Snack",
+    "calories": 220,
+    "notes": "Trail mix and green tea."
+  },
+  {
+    "date": "2025-05-28T19:00:00Z",
+    "name": "Dinner",
+    "calories": 720,
+    "notes": "Stir-fried tofu and veggies with brown rice."
+  },
+  {
+    "date": "2025-05-28T21:00:00Z",
+    "name": "Late Snack",
+    "calories": 150,
+    "notes": "Greek yogurt and honey."
+  },
+
+  {
+    "date": "2025-05-29T08:15:00Z",
+    "name": "Breakfast",
+    "calories": 540,
+    "notes": "Banana pancakes and eggs."
+  },
+  {
+    "date": "2025-05-29T13:00:00Z",
+    "name": "Lunch",
+    "calories": 700,
+    "notes": "Turkey sandwich and apple slices."
+  },
+  {
+    "date": "2025-05-29T16:00:00Z",
+    "name": "Snack",
+    "calories": 210,
+    "notes": "Protein shake post-workout."
+  },
+  {
+    "date": "2025-05-29T18:45:00Z",
+    "name": "Dinner",
+    "calories": 690,
+    "notes": "Baked salmon, couscous, and spinach."
+  },
+  {
+    "date": "2025-05-29T21:30:00Z",
+    "name": "Snack",
+    "calories": 180,
+    "notes": "Almond butter toast."
+  },
+
+  {
+    "date": "2025-05-30T07:45:00Z",
+    "name": "Breakfast",
+    "calories": 490,
+    "notes": "Overnight oats with chia and berries."
+  },
+  {
+    "date": "2025-05-30T12:15:00Z",
+    "name": "Lunch",
+    "calories": 740,
+    "notes": "Chicken burrito bowl with guac."
+  },
+  {
+    "date": "2025-05-30T15:30:00Z",
+    "name": "Snack",
+    "calories": 200,
+    "notes": "Apple and peanut butter."
+  },
+  {
+    "date": "2025-05-30T18:30:00Z",
+    "name": "Dinner",
+    "calories": 780,
+    "notes": "Steak, asparagus, mashed potatoes."
+  },
+  {
+    "date": "2025-05-30T22:00:00Z",
+    "name": "Dessert",
+    "calories": 250,
+    "notes": "Protein mug cake."
+  }
+]

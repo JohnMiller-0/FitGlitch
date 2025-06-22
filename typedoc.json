@@ -1,0 +1,8 @@
+{
+  "entryPoints": ["client/app/src"],
+  "out": "docs",
+  "exclude": ["**/*.spec.ts", "**/node_modules/**", "server/**"],
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": false
+}
