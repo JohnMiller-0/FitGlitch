@@ -70,4 +70,34 @@ The goal of FitGlitch is to create a secure, scalable fitness tracker with persi
 
 - Calculate net daily calories (consumed - burned)
 
-Daily dashboard with calorie goal progress
+- Daily dashboard with calorie goal progress
+
+## Environment Variables (.env)
+
+CLIENT_ORIGIN=https://fit-glitch.vercel.app
+
+JWT_SECRET=your_secret_key
+
+MONGO_URI=your_mongodb_connection_string
+
+## Running Locally
+
+### Backend
+
+cd backend
+
+npm install
+
+npm run dev
+
+### Frontend
+
+cd client
+
+npm install
+
+ng serve
+
+
+## Author
+John Miller, Southern New Hampshire University, 2025
