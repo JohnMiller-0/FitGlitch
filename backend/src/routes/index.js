@@ -22,6 +22,7 @@ const weightController = require('../controllers/weights');
 const workoutController = require('../controllers/workouts');
 const mealController = require('../controllers/meals');
 const dailyStatsController = require('../controllers/dailyStats');
+const macroLookupController = require('../controllers/macroLookup');
 
 // Authentication routes
 router
@@ -84,5 +85,8 @@ router
     .route('/stats')
     .get(auth, dailyStatsController.netDailyCalories);
 
+router
+    .route('/nutrition')
+    .get(macroLookupController.getMacroInfo);
 
-module.exports = router;
+module.exports = router;    

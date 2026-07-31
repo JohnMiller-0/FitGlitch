@@ -1,6 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
-/* Shared form layout styles */
-
+/**
+ * Styles for the application
+ */
 .form-container {
   max-width: 450px;
   margin: 4rem auto;
@@ -14,3 +14,5 @@
   padding: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

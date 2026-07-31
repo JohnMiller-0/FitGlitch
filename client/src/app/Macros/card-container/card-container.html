@@ -1,0 +1,24 @@
+<ng-template #noMacros>
+    <p class="no-macros-message">No Ingredients added yet. Start by adding some ingredients to your meal!</p>
+</ng-template>
+
+<div class="scrollable-container" *ngIf="macroList && macroList.length > 0; else noMacros">
+    <div class="card-container">
+        <app-macro-card *ngFor="let macro of macroList" [itemMacros]="macro"
+            (delete)="handleDelete($event)"></app-macro-card>
+    </div>
+    <div class="form-container">
+        <form *ngIf="saveForm" [formGroup]="saveForm" (ngSubmit)="saveMacros()">
+            <div class="form-group">
+                <label for="mealName">Meal Name</label>
+                <input id="mealName" type="text" formControlName="mealName" class="form-control"
+                    placeholder="e.g. Chicken Salad" [ngClass]="{ 'is-invalid': submitted && f['mealName'].errors }">
+                <div *ngIf="submitted && f['mealName'].errors">
+                    <div *ngIf="f['mealName'].errors?.['required']">
+                        Meal name is required
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Save Meal</button>
+        </form>
+    </div>

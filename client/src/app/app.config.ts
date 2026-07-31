@@ -4,12 +4,13 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { tokenInterceptor } from './auth/token.interceptor';
+import { delayTestInterceptor } from './services/interceptor-timeDelay';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([tokenInterceptor])
+      withInterceptors([tokenInterceptor, delayTestInterceptor])
     )
   ]
 };

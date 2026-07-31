@@ -11,6 +11,7 @@ import { AuthenticationService } from '../services/authentication';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginPayload } from '../models/LoginPayload';
+import { LoadingComponent } from '../loading-component/loading-component';
 
 /**
  * @component
@@ -24,7 +25,7 @@ import { LoginPayload } from '../models/LoginPayload';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LoadingComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -32,6 +33,7 @@ export class LoginComponent implements OnInit {
   public formError: string = ''; // Error message to display if form submission fails
   public credentials!: FormGroup; // Form group to hold user credentials (email and password)
   public submitted: boolean = false; // Flag to indicate if the form has been submitted
+  public loading: boolean = false; // Flag to indicate if the login process is in progress
 
   /**
    * @constructor
@@ -83,16 +85,19 @@ export class LoginComponent implements OnInit {
    */
   private doLogin(): void {
     this.submitted = true; // Set submitted flag to true to indicate form submission
+    this.loading = true; // Set loading flag to true to indicate login process is in progress
     this.formError = ''; // Reset form error message
     // Clone the form values to create a LoginPayload object
     const loginPayload: LoginPayload = {
       email: this.credentials.value.email, // Get the email from the form
       password: this.credentials.value.password // Get the password from the form
     };
+
+
     
     this.authenticationService.login(loginPayload) // Call the login method from AuthenticationService with user credentials
       .then(() => this.router.navigateByUrl('')) // If login is successful, navigate to the home page
-      .catch((message) => this.formError = message); // If there is an error, set the formError message to display the error
+      .catch((message) => this.formError = message) // If there is an error, set the formError message to display the error
   }
 
   /**

@@ -1,0 +1,10 @@
+.scrollable-container {
+  width: auto;
+  overflow-x: auto; /* Enable horizontal scrollbar when content overflows */
+  white-space: nowrap; /* Prevent content from wrapping */
+}
+
+.card-container {
+  display: inline-flex; /* Use inline-flex to allow horizontal scrolling */
+  gap: 16px; /* Optional: Add some space between cards */
+}

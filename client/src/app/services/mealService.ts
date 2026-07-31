@@ -43,7 +43,7 @@ export class MealService {
      */
     getMealsByDate(date: string): Promise<Meal[]> {
         return firstValueFrom(
-            this.http.get<Meal[]>(`${this.apiBaseUrl}/date/${date}`) 
+            this.http.get<Meal[]>(`${this.apiBaseUrl}/date/${date}`)
         );
     }
 

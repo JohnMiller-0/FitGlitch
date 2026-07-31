@@ -2,6 +2,7 @@
 <div class="login-container">
   <div class="login-card">
     <h2 class="text-center mb-4">Login</h2>
+    <app-loading-component [loading]="loading"></app-loading-component>
     <form [formGroup]="credentials" (ngSubmit)="onLoginSubmit()">
       <div role="alert" *ngIf="formError" class="alert alert-danger">
         {{ formError }}

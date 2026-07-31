@@ -1,59 +1,103 @@
-# FitglitchClient
+## FitGlitch
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.1.
+FitGlitch is a full-stack fitness tracking web application designed to help users log daily meals, workouts, and weigh-ins while monitoring caloric progress toward weight goals. Originally developed as an Android app, it was enhanced and migrated to a web-based platform for the SNHU CS-499 Capstone project.
 
-## Development server
+## Live Deployment
 
-To start a local development server, run:
+Frontend: [FitGlitch](https://fit-glitch.vercel.app) (Hosted on Vercel)
 
-```bash
+Backend: [Hosted on Render](https://fitglitch.onrender.com/)
+
+Database: MongoDB Atlas
+
+All components are hosted for free on the above platforms enabling the FitGlitch Web Application to be accessible in any browser.
+
+## Project Purpose
+
+The goal of FitGlitch is to create a secure, scalable fitness tracker with persistent user data, JWT-based authentication, and a modular codebase that’s easy to extend. It supports viewing progress, daily stats, and editing entries for meals, workouts, and weights.
+
+## Tech Stack
+
+### Frontend
+
+- Angular 16
+
+- TypeScript
+
+- Bootstrap 5
+
+### Backend
+
+- Node.js / Express
+
+- MongoDB + Mongoose
+
+- JWT (jsonwebtoken + express-jwt)
+
+- Passport.js
+
+- bcrypt
+
+- CORS
+
+## Features
+
+- Authentication
+
+- Register and login with JWT
+
+- Session persistence across reloads
+
+- Weight Tracking
+
+- Add, edit, delete, and view weights
+
+- View most recent weight
+
+- Meal Logging
+
+- Add, view, edit, and delete meals
+
+- Calories auto-summed per day
+
+- Workout Logging
+
+- Add, view, edit, and delete workouts
+
+- Tracks calories burned
+
+- Net Calories & Dashboard
+
+- Calculate net daily calories (consumed - burned)
+
+- Daily dashboard with calorie goal progress
+
+## Environment Variables (.env)
+
+CLIENT_ORIGIN=https://fit-glitch.vercel.app
+
+JWT_SECRET=your_secret_key
+
+MONGO_URI=your_mongodb_connection_string
+
+## Running Locally
+
+### Backend
+
+cd backend
+
+npm install
+
+npm run dev
+
+### Frontend
+
+cd client
+
+npm install
+
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Author
+John Miller, Southern New Hampshire University, 2025

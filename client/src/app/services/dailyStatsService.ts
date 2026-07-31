@@ -7,7 +7,7 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { delay, firstValueFrom } from 'rxjs';
 import { DailyStat } from '../models/dailyStat';
 import { environment } from '../../environments/environment';
 
@@ -41,7 +41,7 @@ export class DailyStatsService {
      */
     getDailyStats(startDate: string, endDate: string): Promise<DailyStat[]> {
         return firstValueFrom(
-            this.http.get<DailyStat[]>(`${this.apiBaseUrl}?startDate=${startDate}&endDate=${endDate}`)
+            this.http.get<DailyStat[]>(`${this.apiBaseUrl}?startDate=${startDate}&endDate=${endDate}`).pipe(delay(10000))
         );
     }
 
@@ -55,7 +55,7 @@ export class DailyStatsService {
      */
     getTodaysStats(today: string): Promise<DailyStat> {
         return firstValueFrom(
-            this.http.get<DailyStat>(`${this.apiBaseUrl}?startDate=${today}&endDate=${today}`)
+            this.http.get<DailyStat>(`${this.apiBaseUrl}?startDate=${today}&endDate=${today}`).pipe(delay(10000))
         );
     }
 }

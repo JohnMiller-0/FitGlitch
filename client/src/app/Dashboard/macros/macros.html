@@ -1,0 +1,18 @@
+<form [formGroup]="macroForm" (ngSubmit)="onSubmit()">
+    <header class="form-header">
+        <h2>AI Ingredient Search</h2>
+        <h3>Powered by Calorie Ninja</h3>
+    </header>
+    <textarea formControlName="query" class="form-control" rows="6" maxlength="1500"
+        placeholder="Start by searching for portions of ingredients (e.g., 100g chicken, 1 cup rice)"></textarea>
+
+    <button type="submit" class="btn btn-primary">Search Ingredients</button>
+    <div class="char-count">
+        {{ macroForm.get('query')?.value?.length || 0 }}/1500
+    </div>
+    <div class="error" *ngIf="macroForm.get('query')?.hasError('maxlength')">
+        Maximum character limit of 1500 allowed.
+    </div>
+</form>
+<app-loading-component [loading]="loading"></app-loading-component>
+<app-card-container [macroList]="macroList" (mealSaved)="handleMealSaved()"></app-card-container>

@@ -1,0 +1,20 @@
+<ng-template #addMealForm>
+  <app-add-meal (formSubmitted)="handleFormSubmission()"></app-add-meal>
+</ng-template>
+
+
+<div class="meal-container" *ngIf="!addMealFlag; else addMealForm">
+  <h2>Meals for {{ todaysDate }}</h2>
+  <app-loading-component [loading]="loading">
+    <button (click)="addMeal()" class="btn btn-primary">Add Meal</button>
+
+    <ul class="meal-list">
+      <div *ngFor="let meal of meals" class="meal-entry">
+        Meal: {{ meal.name }} — {{ meal.calories }} kcal
+        <button (click)="editMeal(meal._id)">Edit</button>
+        <button (click)="deleteMeal(meal._id)">Delete</button>
+      </div>
+    </ul>
+  </app-loading-component>
+  <app-macros (mealSaved)="handleMealSaved()"></app-macros>
+</div>

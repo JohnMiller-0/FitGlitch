@@ -1,0 +1,22 @@
+<ng-template #formView>
+  <ng-container *ngIf="addWorkoutFlag">
+    <app-add-workout (formSubmitted)="handleFormSubmission()"></app-add-workout>
+  </ng-container>
+  <ng-container *ngIf="editWorkoutFlag">
+    <app-edit-workout (formSubmitted)="handleFormSubmission()"></app-edit-workout>
+  </ng-container>
+</ng-template>
+
+<div class="workout-container" *ngIf="!addWorkoutFlag && !editWorkoutFlag ; else formView">
+  <app-loading-component [loading]="loading"></app-loading-component>
+  <button (click)="addWorkout()" class="btn btn-primary">Add Workout</button>
+
+  <ul class="workout-list">
+    <div *ngFor="let workout of workouts" class="workout-entry">
+      Workout: {{ workout.type }} — {{ workout.calories }} kcal
+      <span *ngIf="workout.notes" class="notes"> — {{ workout.notes }}</span>
+      <button (click)="editWorkout(workout._id)">Edit</button>
+      <button (click)="deleteWorkout(workout._id)">Delete</button>
+    </div>
+  </ul>
+</div>

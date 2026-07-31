@@ -1,0 +1,8 @@
+<ng-container *ngIf="loading">
+    <mat-progress-spinner class="!absolute !top-1/2 !left-1/2 -translate-x-1/2 -translate-y-1/2" mode="indeterminate"
+        diameter="50">
+    </mat-progress-spinner>
+</ng-container>
+<ng-container *ngIf="!loading">
+    <ng-content></ng-content>
+</ng-container>

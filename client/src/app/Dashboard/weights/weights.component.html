@@ -1,0 +1,39 @@
+<ng-template #formView>
+  <ng-container *ngIf="addWeightFlag">
+    <app-add-weight (formSubmitted)="handleFormSubmission()"></app-add-weight>
+  </ng-container>
+  <ng-container *ngIf="editWeightFlag">
+    <app-edit-weight (formSubmitted)="handleFormSubmission()"></app-edit-weight>
+  </ng-container>
+</ng-template>
+
+<!-- weight-list.component.html -->
+<mat-card *ngIf="!addWeightFlag && !editWeightFlag; else formView">
+  <mat-card-header>
+    <mat-card-title>Weight Tracker</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-loading-component [loading]="loading"></app-loading-component>
+
+    <mat-list *ngIf="!loading">
+      <mat-card *ngFor="let weight of weights" class="weight-card">
+        <mat-card-title>{{ weight.weight }} lbs</mat-card-title>
+        <mat-card-subtitle>{{ weight.date | date: 'mediumDate' }}</mat-card-subtitle>
+        <mat-card-actions>
+          <button mat-icon-button color="accent" (click)="editWeight(weight._id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteWeight(weight._id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-list>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="addWeight()">
+      <mat-icon>add</mat-icon> Add Weight
+    </button>
+  </mat-card-actions>
+</mat-card>
