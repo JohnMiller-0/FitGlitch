@@ -21,3 +21,7 @@ Thumbs.db
 # Build output (if any)
 dist/
 build/
+
+
+backend/node_modules/
+client/node_modules/
