@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const CALORIE_NINJA_URL = "https://api.calorieninjas.com/v1/nutrition";
+const CALORIE_NINJA_URL = "https://api.api-ninjas.com/v1/nutrition";
 const API_KEY = process.env.CALORIE_NINJA_API_KEY;
 
 export async function getNutritionalInfo(query) {
