@@ -17,16 +17,25 @@
     <app-loading-component [loading]="loading">
       <button (click)="addMeal()" class="btn btn-primary">Add Meal</button>
 
-      <ul class="meal-list">
-        <div *ngFor="let meal of meals" class="meal-entry">
-          Meal: {{ meal.name }} — {{ meal.calories }} kcal
-          <button (click)="editMeal(meal._id)">Edit</button>
-          <button (click)="deleteMeal(meal._id)">Delete</button>
-        </div>
-      </ul>
-    </app-loading-component>
+      <mat-list *ngIf="meals.length > 0" && !loading>
+        <mat-card *ngFor="let meal of meals" class="meal-card">
+          <mat-card-title>{{ meal.name }}</mat-card-title>
+          <mat-card-content>
+            Calories: {{ meal.calories }} kcal
+          </mat-card-content>
+          <mat-card-actions>
+            <button (click)="editMeal(meal._id)" class="btn btn-secondary">Edit</button>
+            <button (click)="deleteMeal(meal._id)" class="btn btn-danger">Delete</button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-list>
     
     <mat-card-actions>
       <button (click)="addMeal()" class="btn btn-primary">Add Meal</button>
     </mat-card-actions>
+  </mat-card>
+</app-loading-component>
+</mat-card-content>
 </mat-card>
+
+  
