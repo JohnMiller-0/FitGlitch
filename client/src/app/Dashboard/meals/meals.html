@@ -1,20 +1,32 @@
-<ng-template #addMealForm>
-  <app-add-meal (formSubmitted)="handleFormSubmission()"></app-add-meal>
+<ng-template #formView>
+  <ng-container *ngIf="addMealFlag">
+    <app-add-meal (formSubmitted)="handleFormSubmission()"></app-add-meal>
+  </ng-container>
+  <ng-container *ngIf="editMealFlag">
+    <app-edit-meal (formSubmitted)="handleFormSubmission()"></app-edit-meal>
+  </ng-container>
 </ng-template>
 
 
-<div class="meal-container" *ngIf="!addMealFlag; else addMealForm">
-  <h2>Meals for {{ todaysDate }}</h2>
-  <app-loading-component [loading]="loading">
-    <button (click)="addMeal()" class="btn btn-primary">Add Meal</button>
+<mat-card *ngIf="!addMealFlag && !editMealFlag; else formView">
+  <mat-card-header>
+    <mat-card-title>Meals for {{ todaysDate }}</mat-card-title>
+  </mat-card-header>
 
-    <ul class="meal-list">
-      <div *ngFor="let meal of meals" class="meal-entry">
-        Meal: {{ meal.name }} — {{ meal.calories }} kcal
-        <button (click)="editMeal(meal._id)">Edit</button>
-        <button (click)="deleteMeal(meal._id)">Delete</button>
-      </div>
-    </ul>
-  </app-loading-component>
-  <app-macros (mealSaved)="handleMealSaved()"></app-macros>
-</div>
+  <mat-card-content>
+    <app-loading-component [loading]="loading">
+      <button (click)="addMeal()" class="btn btn-primary">Add Meal</button>
+
+      <ul class="meal-list">
+        <div *ngFor="let meal of meals" class="meal-entry">
+          Meal: {{ meal.name }} — {{ meal.calories }} kcal
+          <button (click)="editMeal(meal._id)">Edit</button>
+          <button (click)="deleteMeal(meal._id)">Delete</button>
+        </div>
+      </ul>
+    </app-loading-component>
+    
+    <mat-card-actions>
+      <button (click)="addMeal()" class="btn btn-primary">Add Meal</button>
+    </mat-card-actions>
+</mat-card>

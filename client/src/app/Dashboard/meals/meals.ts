@@ -14,7 +14,11 @@ import { formatDateToYyyyMmDd } from '../../utils/dateUtils';
 import { LoadingComponent } from '../../loading-component/loading-component';
 import { Macros } from '../macros/macros';
 import { AddMealComponent } from '../../Add-Forms/add-meal/add-meal';
-
+import { EditMealComponent } from '../../Edit-Forms/edit-meal/edit-meal';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 /**
  * @component
  * @selector app-meals
@@ -24,13 +28,15 @@ import { AddMealComponent } from '../../Add-Forms/add-meal/add-meal';
 @Component({
   selector: 'app-meals',
   standalone: true,
-  imports: [CommonModule, LoadingComponent, Macros, AddMealComponent],
+  imports: [CommonModule, LoadingComponent, Macros, AddMealComponent, EditMealComponent,
+     MatButtonModule, MatIconModule, MatListModule, MatTooltipModule],
   templateUrl: './meals.html',
   styleUrls: ['./meals.css'],
 })
 export class MealsComponent implements OnInit {
   meals: Meal[] = []; // Array to hold meals for the current date
   addMealFlag: boolean = false; // Flag to control the display of the add meal form
+  editMealFlag: boolean = false; // Flag to control the display of the edit meal form
 
   readonly todaysDate = formatDateToYyyyMmDd(new Date()); // Today's date formatted as 'YYYY-MM-DD'
   @Input() loading: boolean = false; // Input property to control the loading state
@@ -85,12 +91,7 @@ export class MealsComponent implements OnInit {
       console.error(`Error deleting meal with ID: ${mealId}`, error); // Log any errors that occur during deletion
     }
   }
-
-  editMeal(mealId: string): void {
-    localStorage.removeItem('mealId'); // Clear any existing mealId in localStorage
-    localStorage.setItem('mealId', mealId); // Store the new mealId in localStorage
-    this.router.navigate(['edit-meal']); // Navigate to the edit meal page
-  }
+  
 
   /**
    * Navigates to the add meal page.
@@ -100,8 +101,15 @@ export class MealsComponent implements OnInit {
     this.addMealFlag = true; // Set the flag to true to display the add meal form
   }
 
+  editMeal(mealId: string): void {
+    localStorage.removeItem('mealId'); // Clear any existing mealId in localStorage
+    localStorage.setItem('mealId', mealId); // Store the new mealId in localStorage
+    this.editMealFlag = true; // Set the flag to true to display the edit meal form
+  }
+
   handleFormSubmission(): void {
     this.addMealFlag = false;
+    this.editMealFlag = false; // Reset the edit meal flag as well
     this.ngOnInit(); // Refresh the meals data when the form is submitted
   }
 
