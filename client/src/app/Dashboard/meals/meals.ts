@@ -14,6 +14,7 @@ import { formatDateToYyyyMmDd } from '../../utils/dateUtils';
 import { LoadingComponent } from '../../loading-component/loading-component';
 import { Macros } from '../macros/macros';
 import { AddMealComponent } from '../../Add-Forms/add-meal/add-meal';
+import { MatCardModule } from '@angular/material/card';
 import { EditMealComponent } from '../../Edit-Forms/edit-meal/edit-meal';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,7 +30,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-meals',
   standalone: true,
   imports: [CommonModule, LoadingComponent, Macros, AddMealComponent, EditMealComponent,
-     MatButtonModule, MatIconModule, MatListModule, MatTooltipModule],
+     MatButtonModule, MatIconModule, MatListModule, MatTooltipModule, MatCardModule],
   templateUrl: './meals.html',
   styleUrls: ['./meals.css'],
 })
