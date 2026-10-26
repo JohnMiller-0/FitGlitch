@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
   public credentials!: FormGroup; // Form group to hold user credentials (email and password)
   public submitted: boolean = false; // Flag to indicate if the form has been submitted
   public loading: boolean = false; // Flag to indicate if the login process is in progress
+  public loginForm!: FormGroup; // Form group to hold the login form controls
 
   /**
    * @constructor
@@ -48,7 +49,7 @@ export class LoginComponent implements OnInit {
    */
   constructor(
     private router: Router,
-    private formBuilder: FormBuilder,
+    private loginFormBuilder: FormBuilder,
     private authenticationService: AuthenticationService
   ) { }
 
@@ -58,10 +59,11 @@ export class LoginComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.credentials = this.formBuilder.group({
+    this.loginForm = this.loginFormBuilder.group({
       email: ['', [Validators.required, Validators.email]], // Email field with required and email validation
       password: ['', [Validators.required, Validators.minLength(6)]] // Password field with required and minLength validation
     });
+    this.credentials = this.loginForm; // Assign the loginForm to credentials for backward compatibility
   }
 
   /**
@@ -73,7 +75,7 @@ export class LoginComponent implements OnInit {
   public onLoginSubmit(): void {
     this.formError = ''; // Reset form error message
 
-    if (this.credentials.invalid) { // Check if the form is invalid
+    if (this.loginForm.invalid) { // Check if the form is invalid
       this.formError = 'Please fill in both email and password.'; // Set error message if form is invalid
       return; // Exit the method if form is invalid
     } else {
@@ -94,8 +96,8 @@ export class LoginComponent implements OnInit {
     this.formError = ''; // Reset form error message
     // Clone the form values to create a LoginPayload object
     const loginPayload: LoginPayload = {
-      email: this.credentials.value.email, // Get the email from the form
-      password: this.credentials.value.password // Get the password from the form
+      email: this.loginForm.value.email, // Get the email from the form
+      password: this.loginForm.value.password // Get the password from the form
     };
 
 
@@ -120,7 +122,7 @@ export class LoginComponent implements OnInit {
    * @returns {any} The form controls of the credentials form group.
    */
   get f() {
-    return this.credentials.controls; // Getter for form controls to simplify template access
+    return this.loginForm.controls; // Getter for form controls to simplify template access
   }
 
 }
