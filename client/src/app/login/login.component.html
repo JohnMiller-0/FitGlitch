@@ -1,46 +1,32 @@
-<!-- Login Form -->
-<div class="login-container">
-  <div class="login-card">
-    <h2 class="text-center mb-4">Login</h2>
-    <app-loading-component [loading]="loading"></app-loading-component>
-    <form [formGroup]="credentials" (ngSubmit)="onLoginSubmit()">
-      <div role="alert" *ngIf="formError" class="alert alert-danger">
-        {{ formError }}
-      </div>
-      <!-- Form Controls -->
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" class="form-control" id="email" placeholder="Enter email address" formControlName="email"
-          class="form-control" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
-        <div *ngIf="submitted && f['email'].invalid">
-          <div *ngIf="f['email'].errors?.['required']">
-            Email is required.
-          </div>
-          <div *ngIf="f['email'].errors?.['email']">
-            Invalid email format.
-          </div>
-        </div>
-      </div>
-
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="e.g 12+ alphanumerics"
-          formControlName="password">
-        <div *ngIf="submitted && f['password'].invalid">
-          <div *ngIf="f['password'].errors?.['required']">
-            Password is required.
-          </div>
-          <div *ngIf="f['password'].errors?.['minlength']">
-            Password must be at least 6 characters.
-          </div>
-        </div>
-      </div>
-      <button type="submit" role="button" class="btn btn-primary w-100 mt-3">Sign In!</button>
-      <button type="button" role="button" class="btn btn-link w-100 mt-2" (click)="onRegisterSubmit()">Don't have an
-        account? Register</button>
-    </form>
-  </div>
-
-</div>
+<mat-card>
+  <mat-card-title>
+    Login
+  </mat-card-title>
+  <mat-card-content>
+    Please enter your login credentials.
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="Enter email address">
+      <mat-error *ngIf="submitted && f['email'].errors?.['required']">
+        Email is required.
+      </mat-error>
+      <mat-error *ngIf="submitted && f['email'].errors?.['email']">
+        Invalid email format.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" placeholder="Enter password">
+      <mat-error *ngIf="submitted && f['password'].errors?.['required']">
+        Password is required.
+      </mat-error>
+      <mat-error *ngIf="submitted && f['password'].errors?.['minlength']">
+        Password must be at least 6 characters.
+      </mat-error>
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" type="submit">Login</button>
+    <button mat-button color="accent" type="button" (click)="onRegisterSubmit()">Don't have an account? Register</button>
+  </mat-card-actions>
+</mat-card>

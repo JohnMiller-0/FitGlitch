@@ -12,7 +12,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginPayload } from '../models/LoginPayload';
 import { LoadingComponent } from '../loading-component/loading-component';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 /**
  * @component
  * @selector app-login
@@ -25,7 +27,7 @@ import { LoadingComponent } from '../loading-component/loading-component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LoadingComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LoadingComponent, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
